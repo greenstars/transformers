@@ -144,6 +144,8 @@ class BartConfig(PretrainedConfig):
         static_position_embeddings=False,
         add_bias_logits=False,
         force_bos_token_to_be_generated=False,
+        encoder_max_position_embeddings=None,   
+        decoder_max_position_embeddings=None,
         **common_kwargs
     ):
         r"""
@@ -206,6 +208,9 @@ class BartConfig(PretrainedConfig):
         self.force_bos_token_to_be_generated = force_bos_token_to_be_generated
 
         self.do_blenderbot_90_layernorm = do_blenderbot_90_layernorm
+
+        self.encoder_max_position_embeddings = encoder_max_position_embeddings if encoder_max_position_embeddings else max_position_embeddings  
+        self.decoder_max_position_embeddings = decoder_max_position_embeddings if decoder_max_position_embeddings else max_position_embeddings
 
     @property
     def num_attention_heads(self) -> int:
