@@ -425,6 +425,8 @@ class LongformerSelfAttention(nn.Module):
             +ve: global attention
 
         """
+
+        print(attention_mask, is_index_masked, is_index_global_attn, is_global_attn)
         hidden_states = hidden_states.transpose(0, 1)
 
         # project hidden states
