@@ -154,7 +154,7 @@ BART_INPUTS_DOCSTRING = r"""
 def invert_mask(attention_mask):
     """Turns 1->0, 0->1, False->True, True-> False"""
     assert attention_mask.dim() == 2
-    return attention_mask.eq(0)
+    return (1.0 - attention_mask) * -10000.0 # to deal with longformer masks [old one - return attention_mask.eq(0)]
 
 
 def _prepare_bart_decoder_inputs(
@@ -349,6 +349,8 @@ class BartEncoder(nn.Module):
         # check attention mask and invert
         if attention_mask is not None:
             attention_mask = invert_mask(attention_mask)
+
+        print("attention_mask in encoder -", attention_mask)
 
         inputs_embeds = self.embed_tokens(input_ids) * self.embed_scale
         embed_pos = self.embed_positions(input_ids)
