@@ -1449,12 +1449,14 @@ class LongformerModel(LongformerPreTrainedModel):
             pad_token_id=self.config.pad_token_id,
         )
 
+        print('longformer model after padding - ',attention_mask)
         # We can provide a self-attention mask of dimensions [batch_size, from_seq_length, to_seq_length]
         # ourselves in which case we just need to make it broadcastable to all heads.
         extended_attention_mask: torch.Tensor = self.get_extended_attention_mask(attention_mask, input_shape, device)[
             :, 0, 0, :
         ]
 
+        print('longformer model after extention - ',extended_attention_mask)
         embedding_output = self.embeddings(
             input_ids=input_ids, position_ids=position_ids, token_type_ids=token_type_ids, inputs_embeds=inputs_embeds
         )
