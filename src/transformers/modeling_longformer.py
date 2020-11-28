@@ -426,7 +426,6 @@ class LongformerSelfAttention(nn.Module):
 
         """
 
-        print(attention_mask, is_index_masked, is_index_global_attn, is_global_attn)
         hidden_states = hidden_states.transpose(0, 1)
 
         # project hidden states
@@ -963,7 +962,6 @@ class LongformerAttention(nn.Module):
     def forward(
         self, hidden_states, attention_mask=None, is_index_masked=None, is_index_global_attn=None, is_global_attn=None
     ):
-        print('longformer attention position - ',attention_mask)
         self_outputs = self.self(
             hidden_states,
             attention_mask=attention_mask,
@@ -1019,7 +1017,6 @@ class LongformerLayer(nn.Module):
     def forward(
         self, hidden_states, attention_mask=None, is_index_masked=None, is_index_global_attn=None, is_global_attn=None
     ):
-        print('longformer_layer - ',attention_mask)
         self_attn_outputs = self.attention(
             hidden_states,
             attention_mask=attention_mask,
@@ -1057,7 +1054,6 @@ class LongformerEncoder(nn.Module):
         return_dict=False,
     ):
 
-        print('longformer encoder - ',attention_mask)
         is_index_masked = attention_mask < 0
         is_index_global_attn = attention_mask > 0
         is_global_attn = is_index_global_attn.flatten().any().item()
@@ -1434,12 +1430,10 @@ class LongformerModel(LongformerPreTrainedModel):
         if token_type_ids is None:
             token_type_ids = torch.zeros(input_shape, dtype=torch.long, device=device)
 
-        print('longformer model - ',attention_mask)
         # merge `global_attention_mask` and `attention_mask`
         if global_attention_mask is not None:
             attention_mask = self._merge_to_attention_mask(attention_mask, global_attention_mask)
 
-        print('longformer model after global merge - ',attention_mask)
         padding_len, input_ids, attention_mask, token_type_ids, position_ids, inputs_embeds = self._pad_to_window_size(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -1449,14 +1443,12 @@ class LongformerModel(LongformerPreTrainedModel):
             pad_token_id=self.config.pad_token_id,
         )
 
-        print('longformer model after padding - ',attention_mask)
         # We can provide a self-attention mask of dimensions [batch_size, from_seq_length, to_seq_length]
         # ourselves in which case we just need to make it broadcastable to all heads.
         extended_attention_mask: torch.Tensor = self.get_extended_attention_mask(attention_mask, input_shape, device)[
             :, 0, 0, :
         ]
 
-        print('longformer model after extention - ',extended_attention_mask)
         embedding_output = self.embeddings(
             input_ids=input_ids, position_ids=position_ids, token_type_ids=token_type_ids, inputs_embeds=inputs_embeds
         )
