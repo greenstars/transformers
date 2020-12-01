@@ -289,16 +289,16 @@ class BartEncoder(nn.Module):
         embed_dim = embed_tokens.embedding_dim
         self.embed_scale = math.sqrt(embed_dim) if config.scale_embedding else 1.0
         self.padding_idx = embed_tokens.padding_idx
-        self.max_source_positions = config.max_position_embeddings
+        self.max_source_positions = config.encoder_max_position_embeddings
 
         self.embed_tokens = embed_tokens
         if config.static_position_embeddings:
             self.embed_positions = SinusoidalPositionalEmbedding(
-                config.max_position_embeddings, embed_dim, self.padding_idx
+                config.encoder_max_position_embeddings, embed_dim, self.padding_idx
             )
         else:
             self.embed_positions = LearnedPositionalEmbedding(
-                config.max_position_embeddings,
+                config.encoder_max_position_embeddings,
                 embed_dim,
                 self.padding_idx,
                 config.extra_pos_embeddings,
@@ -475,16 +475,16 @@ class BartDecoder(nn.Module):
         self.dropout = config.dropout
         self.layerdrop = config.decoder_layerdrop
         self.padding_idx = embed_tokens.padding_idx
-        self.max_target_positions = config.max_position_embeddings
+        self.max_target_positions = config.decoder_max_position_embeddings
         self.embed_scale = math.sqrt(config.d_model) if config.scale_embedding else 1.0
         self.embed_tokens = embed_tokens
         if config.static_position_embeddings:
             self.embed_positions = SinusoidalPositionalEmbedding(
-                config.max_position_embeddings, config.d_model, config.pad_token_id
+                config.decoder_max_position_embeddings, config.d_model, config.pad_token_id
             )
         else:
             self.embed_positions = LearnedPositionalEmbedding(
-                config.max_position_embeddings,
+                config.decoder_max_position_embeddings,
                 config.d_model,
                 self.padding_idx,
                 config.extra_pos_embeddings,
