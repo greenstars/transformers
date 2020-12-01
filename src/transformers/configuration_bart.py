@@ -95,7 +95,12 @@ BART_CONFIG_ARGS_DOC = r"""
             True
         force_bos_token_to_be_generated (:obj:`bool`, `optional`, defaults to :obj:`False`):
             Whether or not to force BOS token to be generated at step 1 (after ``decoder_start_token_id``), only true for `bart-large-cnn`.
-
+        encoder_max_position_embeddings (:obj:`int`, optional, defaults to 1024):
+            The maximum sequence length that this model encoder might ever be used with.
+            Typically set this to something large just in case (e.g., 512 or 1024 or 2048).
+        decoder_max_position_embeddings (:obj:`int`, optional, defaults to 1024):
+            The maximum sequence length that this model decoder might ever be used with.
+            Typically set this to something large just in case (e.g., 512 or 1024 or 2048).
 """
 
 
@@ -138,6 +143,8 @@ class BartConfig(PretrainedConfig):
         static_position_embeddings=False,
         add_bias_logits=False,
         force_bos_token_to_be_generated=False,
+        encoder_max_position_embeddings=None,   
+        decoder_max_position_embeddings=None,
         **common_kwargs
     ):
         r"""
@@ -171,7 +178,11 @@ class BartConfig(PretrainedConfig):
         self.decoder_ffn_dim = decoder_ffn_dim
         self.decoder_layers = decoder_layers
         self.decoder_attention_heads = decoder_attention_heads
+
         self.max_position_embeddings = max_position_embeddings
+        self.encoder_max_position_embeddings = encoder_max_position_embeddings if encoder_max_position_embeddings else max_position_embeddings  
+        self.decoder_max_position_embeddings = decoder_max_position_embeddings if decoder_max_position_embeddings else max_position_embeddings
+
         self.init_std = init_std  # Normal(0, this parameter)
         self.activation_function = activation_function
 
