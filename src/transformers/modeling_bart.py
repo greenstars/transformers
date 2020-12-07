@@ -133,11 +133,12 @@ BART_INPUTS_DOCSTRING = r"""
 def invert_mask(attention_mask):
     """Turns 1->0, 0->1, False->True, True-> False"""
     assert attention_mask.dim() == 2
-    inverted_attention_mask = attention_mask.clone()
-    inverted_attention_mask[attention_mask.eq(0)] = 1
-    inverted_attention_mask[attention_mask.eq(1)] = 0
-    inverted_attention_mask[attention_mask.gt(1)] = -1
-    return inverted_attention_mask
+    #inverted_attention_mask = attention_mask.clone()
+    #inverted_attention_mask[attention_mask.eq(0)] = 1
+    #inverted_attention_mask[attention_mask.eq(1)] = 0
+    #inverted_attention_mask[attention_mask.gt(1)] = -1
+    #return inverted_attention_mask
+    return attention_mask.eq(0)
 
 
 def _prepare_bart_decoder_inputs(
