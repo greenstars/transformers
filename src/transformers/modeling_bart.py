@@ -724,7 +724,7 @@ class Attention(nn.Module):
         if key_padding_mask is not None:  # don't attend to padding symbols
             attn_weights = attn_weights.view(bsz, self.num_heads, tgt_len, src_len)
             reshaped = key_padding_mask.unsqueeze(1).unsqueeze(2)
-            #reshaped[reshaped.lt(1)] = 0
+            reshaped[reshaped.lt(1)] = 0
             print('bart key_padding, reshaped - ',key_padding_mask, reshaped)
             attn_weights = attn_weights.masked_fill(reshaped, float("-inf"))
             attn_weights = attn_weights.view(bsz * self.num_heads, tgt_len, src_len)
