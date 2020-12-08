@@ -417,7 +417,7 @@ class DecoderLayer(nn.Module):
         if self.normalize_before:
             x = self.self_attn_layer_norm(x)
         # Self Attention
-        print('decoder self attention -')
+        #print('decoder self attention -')
 
         x, self_attn_weights = self.self_attn(
             query=x,
@@ -438,7 +438,7 @@ class DecoderLayer(nn.Module):
         if self.normalize_before:
             x = self.encoder_attn_layer_norm(x)
 
-        print('cross attention -')
+        #print('cross attention -')
         x, _ = self.encoder_attn(
             query=x,
             key=encoder_hidden_states,
@@ -724,8 +724,8 @@ class Attention(nn.Module):
         if key_padding_mask is not None:  # don't attend to padding symbols
             attn_weights = attn_weights.view(bsz, self.num_heads, tgt_len, src_len)
             reshaped = key_padding_mask.unsqueeze(1).unsqueeze(2).clone()
-            reshaped[reshaped.lt(1)] = 0
-            print('bart key_padding, reshaped - ',key_padding_mask, reshaped)
+            reshaped[reshaped.lt(1)] = 0  # atted to deal with longforme global attention values
+            #print('bart key_padding, reshaped - ',key_padding_mask, reshaped)
             attn_weights = attn_weights.masked_fill(reshaped, float("-inf"))
             attn_weights = attn_weights.view(bsz * self.num_heads, tgt_len, src_len)
         attn_weights = F.softmax(attn_weights, dim=-1)
